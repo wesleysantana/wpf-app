@@ -1,0 +1,115 @@
+﻿<Window x:Class="WpfApp.Views.PedidosWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:models="clr-namespace:WpfApp.Models"
+        Title="Pedido" Height="520" Width="820"
+        WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <!-- Lista todos os valores do enum FormaPagamento -->
+        <ObjectDataProvider x:Key="FormaPagamentoValues"
+                        MethodName="GetValues"
+                        ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="models:FormaPagamento"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Cabeçalho -->
+        <StackPanel Orientation="Horizontal">
+            <StackPanel.Resources>
+                <Style TargetType="FrameworkElement">
+                    <Setter Property="Margin" Value="0,0,12,0"/>
+                </Style>
+            </StackPanel.Resources>
+
+            <TextBlock Text="Pessoa:" VerticalAlignment="Center" Margin="2"/>
+            <TextBox Width="455" Text="{Binding PessoaSelecionada.Nome}" IsReadOnly="True" Margin="2"/>
+
+            <TextBlock Text="Forma de Pagamento:" VerticalAlignment="Center" Margin="6,0,2,0"/>
+            <ComboBox Width="160" Margin="2"
+                ItemsSource="{Binding Source={StaticResource FormaPagamentoValues}}"
+                SelectedItem="{Binding FormaPagamento}"/>
+        </StackPanel>
+
+        <!-- Itens -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="7*"/>
+                <ColumnDefinition Width="194*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" Margin="0,0,0,424" Grid.RowSpan="2">
+                <StackPanel.Resources>
+                    <Style TargetType="FrameworkElement">
+                        <Setter Property="Margin" Value="0,0,8,0"/>
+                    </Style>
+                </StackPanel.Resources>
+
+                <ComboBox Width="300"
+                  ItemsSource="{Binding Produtos}"
+                  SelectedItem="{Binding ProdutoSelecionado}"
+                  DisplayMemberPath="Nome"/>
+                <TextBox Width="80" Text="{Binding Quantidade}"/>
+                <Button Content="Adicionar" Command="{Binding AdicionarItemCmd}"/>
+            </StackPanel>
+
+            <DataGrid Grid.Row="1" ItemsSource="{Binding Itens}" AutoGenerateColumns="False" Grid.ColumnSpan="2">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Produto" Binding="{Binding ProdutoNome}" Width="*"/>
+                    <DataGridTextColumn Header="Valor" Binding="{Binding ValorUnitario}" Width="120"/>
+                    <DataGridTextColumn Header="Qtd" Binding="{Binding Quantidade}" Width="80"/>
+                    <DataGridTextColumn Header="Subtotal" Binding="{Binding Subtotal}" Width="120"/>
+                    <DataGridTemplateColumn Header="Ação" Width="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Command="{Binding DataContext.RemoverItemCmd, 
+                                    RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="{Binding}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/Resources/garbage.png" Width="16" Height="16" Margin="2"/>
+                                        <TextBlock Text="Remover" Margin="2"/>
+                                    </StackPanel>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <!-- Rodapé -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <StackPanel.Resources>
+                <Style TargetType="FrameworkElement">
+                    <Setter Property="Margin" Value="0,0,12,0"/>
+                </Style>
+            </StackPanel.Resources>
+            <TextBlock Text="{Binding ValorTotal, StringFormat='Total: {0:C2}'}"
+                 FontWeight="Bold" VerticalAlignment="Center" Margin="2,0,6,0"/>
+            <Button Command="{Binding FinalizarCmd}" Margin="2">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Resources/arrow-bottom.png" Width="16" Height="16" Margin="2"/>
+                    <TextBlock Text="Finalizar" Margin="2"/>
+                </StackPanel>
+            </Button>            
+            <Button Command="{Binding CancelarCmd}" Margin="2">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Resources/cancel.png" Width="16" Height="16" Margin="2"/>
+                    <TextBlock Text="Cancelar" Margin="2"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -5,8 +5,36 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="Benner" Height="450" Width="800"  WindowStartupLocation="CenterScreen">     
+    <DockPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="8">
+            <StackPanel.Resources>
+                <Style TargetType="FrameworkElement">
+                    <Setter Property="Margin" Value="0,0,8,0"/>
+                </Style>
+            </StackPanel.Resources>
+            <Button Click="OpenPeople" Margin="2">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Resources/people.png" Width="16" Height="16" Margin="2,0,2,0"/>
+                    <TextBlock Text="Pessoas" Margin="2,0,2,0"/>
+                </StackPanel>
+            </Button>
+            <Button Click="OpenProducts" Margin="2">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Resources/box.png" Width="16" Height="16" Margin="2,0,2,0"/>
+                    <TextBlock Text="Produtos" Margin="2,0,2,0"/>
+                </StackPanel>
+            </Button>            
+            <Button Click="OpenOrders" Margin="2">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Resources/order.png" Width="16" Height="16" Margin="2,0,2,0"/>
+                    <TextBlock Text="Pedidos" Margin="2,0,2,0"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+        <Image x:Name="imgBenner" 
+               Width="452" 
+               Height="235" 
+               Stretch="Uniform"/>
+    </DockPanel>
 </Window>
