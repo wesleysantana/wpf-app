@@ -1,125 +1,203 @@
 ﻿<Window x:Class="WpfApp.Views.PessoasWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        Title="Cadastro de Pessoas" Height="600" Width="900" 
-	WindowStartupLocation="CenterScreen">
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        Title="Cadastro de Pessoas" Height="620" Width="960"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <!-- Borda vermelha + tooltip quando houver erro de validação -->
+        <Style x:Key="ValidationTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="ToolTip" Value="{Binding (Validation.Errors)[0].ErrorContent, 
+                                                      RelativeSource={RelativeSource Self}}"/>
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="BorderBrush" Value="Red"/>
+                    <Setter Property="BorderThickness" Value="1.5"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ValidationMaskedStyle" TargetType="{x:Type xctk:MaskedTextBox}">
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="ToolTip" Value="{Binding (Validation.Errors)[0].ErrorContent, 
+                                                      RelativeSource={RelativeSource Self}}"/>
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="BorderBrush" Value="Red"/>
+                    <Setter Property="BorderThickness" Value="1.5"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
 
     <Grid Margin="8">
         <Grid.RowDefinitions>
+            <!-- 1) Filtros -->
             <RowDefinition Height="Auto"/>
+            <!-- 2) Lista -->
             <RowDefinition Height="*"/>
+            <!-- 3) Detalhes + Ações -->
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
 
-        <!-- Filtros e ações -->
-        <StackPanel Orientation="Horizontal">
-            <StackPanel.Resources>
-                <Style TargetType="FrameworkElement">
-                    <Setter Property="Margin" Value="0,0,8,0"/>
-                </Style>
-            </StackPanel.Resources>
-            <Label Content="Nome:" VerticalAlignment="Center"/>
-            <TextBox Width="342" Text="{Binding FiltroNome, UpdateSourceTrigger=PropertyChanged}" />
-            <Label Content="CPF:" VerticalAlignment="Center"/>
-            <!--<TextBox Width="150" Text="{Binding FiltroCpf, UpdateSourceTrigger=PropertyChanged}" />-->
-            <xctk:MaskedTextBox
-                Width="79"
-                Mask="000,000,000-00"
-                Text="{Binding FiltroCpf, UpdateSourceTrigger=PropertyChanged}" />
-            <Button Command="{Binding FiltrarCmd}" Margin="2">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="/Resources/filter.png" Width="16" Height="16" Margin="2,0,2,0"/>
-                    <TextBlock Text="Filtrar" Margin="2,0,2,0"/>
-                </StackPanel>
-            </Button>
-            <Button Command="{Binding IncluirCmd}" Margin="2">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="/Resources/insert.png" Width="16" Height="16" Margin="2,0,2,0"/>
-                    <TextBlock Text="Incluir" Margin="2,0,2,0"/>
-                </StackPanel>
-            </Button>
-            <Button Command="{Binding SalvarCmd}" Margin="2">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="/Resources/save.png" Width="16" Height="16" Margin="2,0,2,0"/>
-                    <TextBlock Text="Salvar" Margin="2,0,2,0"/>
-                </StackPanel>
-            </Button>
-            <Button Command="{Binding ExcluirCmd}" Margin="2">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="/Resources/garbage.png" Width="16" Height="16" Margin="2,0,2,0"/>
-                    <TextBlock Text="Excluir" Margin="2,0,2,0"/>
-                </StackPanel>
-            </Button>
-            <Button Command="{Binding IncluirPedidoCmd}" Margin="2">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="/Resources/insert-order.png" Width="16" Height="16" Margin="2,0,2,0"/>
-                    <TextBlock Text="Incluir Pedido" Margin="2,0,2,0"/>
-                </StackPanel>
-            </Button>
-        </StackPanel>
+        <!-- (1) FILTROS -->
+        <GroupBox Header="Filtros" Padding="8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="260"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="160"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-        <!-- Grid Pessoas -->
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Pessoas}"
-              SelectedItem="{Binding PessoaSelecionada}"
-              AutoGenerateColumns="False" IsReadOnly="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" Width="60"/>
-                <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="*"/>
-                <DataGridTextColumn Header="CPF" Binding="{Binding CPF}" Width="150"/>
-                <DataGridTextColumn Header="Endereço" Binding="{Binding Endereco}" Width="*"/>
-            </DataGrid.Columns>
-        </DataGrid>
+                <Label Content="Nome:" VerticalAlignment="Center"/>
+                <TextBox Grid.Column="1" MaxLength="255"
+                         Text="{Binding FiltroNome, UpdateSourceTrigger=PropertyChanged}"
+                         ToolTip="Digite parte do nome para filtrar"/>
 
-        <!-- Filtros de pedidos -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal">
-            <StackPanel.Resources>
-                <Style TargetType="FrameworkElement">
-                    <Setter Property="Margin" Value="0,0,12,0"/>
-                </Style>
-            </StackPanel.Resources>
-            <CheckBox Content="Somente entregues" IsChecked="{Binding SomenteEntregues}" Margin="2,0,2,0"/>
-            <CheckBox Content="Somente pagos" IsChecked="{Binding SomentePagos}" Margin="2,0,2,0"/>
-            <CheckBox Content="Pendentes de pagamento" IsChecked="{Binding SomentePendentesPgto}" Margin="2,0,2,0"/>
-            <Button Command="{Binding AplicarFiltrosPedidosCmd}" Margin="2">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="/Resources/arrow-bottom.png" Width="16" Height="16" Margin="2,0,2,0"/>
-                    <TextBlock Text="Aplicar" Margin="2,0,2,0"/>
-                </StackPanel>
-            </Button>
-        </StackPanel>
+                <Label Grid.Column="3" Content="CPF:" VerticalAlignment="Center"/>
 
-        <!-- Pedidos da pessoa -->
-        <DataGrid Grid.Row="3" ItemsSource="{Binding PedidosDaPessoa}" AutoGenerateColumns="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Data" Binding="{Binding DataVenda}" Width="150" />
-                <DataGridTextColumn Header="Valor Total" Binding="{Binding ValorTotal}" Width="120" />
-                <DataGridTextColumn Header="Pagamento" Binding="{Binding FormaPagamento}" Width="120"/>
-                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="100"/>
-                <DataGridTemplateColumn Header="Ações" Width="260">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <StackPanel.Resources>
-                                    <Style TargetType="FrameworkElement">
-                                        <Setter Property="Margin" Value="0,0,6,0"/>
-                                    </Style>
-                                </StackPanel.Resources>
-                                <Button Content="Pago" Margin="2,0,2,0"
-                                    Command="{Binding DataContext.MarcarPagoCmd, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                    CommandParameter="{Binding Id}"/>
-                                <Button Content="Enviado" Margin="2,0,2,0"
-                                    Command="{Binding DataContext.MarcarEnviadoCmd, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                    CommandParameter="{Binding Id}"/>
-                                <Button Content="Recebido" Margin="2,0,2,0"
-                                    Command="{Binding DataContext.MarcarRecebidoCmd, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                    CommandParameter="{Binding Id}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+                <!-- Máscara de CPF: use pontos e traço -->
+                <xctk:MaskedTextBox Grid.Column="4"
+                                    Mask="000,000,000-00"
+                                    Text="{Binding FiltroCpf, UpdateSourceTrigger=PropertyChanged}"
+                                    ToolTip="Digite o CPF para filtrar"/>
+
+                <Button Grid.Column="6" Command="{Binding FiltrarCmd}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Resources/filter.png" Width="16" Height="16" Margin="0,0,6,0"/>
+                        <TextBlock Text="Filtrar"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </GroupBox>
+
+        <!-- (2) LISTA (GRID)  -->
+        <GroupBox Grid.Row="1" Header="Lista de Pessoas" Padding="8" Margin="0,8,0,8">
+            <DataGrid ItemsSource="{Binding PessoasCollection}"
+                      SelectedItem="{Binding PessoaSelecionada, Mode=TwoWay}"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      SelectionMode="Single"
+                      SelectionUnit="FullRow">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="60" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="*"/>
+                    <DataGridTextColumn Header="CPF"  Binding="{Binding CPF}"  Width="150"/>
+                    <DataGridTextColumn Header="Endereço" Binding="{Binding Endereco}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+
+        <!-- (3) DETALHES + AÇÕES -->
+        <GroupBox Grid.Row="2" Header="Detalhes da Pessoa Selecionada / Novo Cadastro" Padding="8">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <!-- Formulário -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Botões (com quebra automática) -->
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Formulário de detalhes (bind em PessoaEdicao) -->
+                <Grid Grid.Row="0" Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="260"/>
+                        <ColumnDefinition Width="24"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="160"/>
+                        <ColumnDefinition Width="24"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="340"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Nome:" VerticalAlignment="Center" Margin="2"/>
+                    <TextBox Grid.Column="1"
+                             Style="{StaticResource ValidationTextBoxStyle}"
+                             Text="{Binding PessoaEdicao.Nome, 
+                                            UpdateSourceTrigger=PropertyChanged, 
+                                            ValidatesOnDataErrors=True}"
+                             ToolTip="Nome completo"
+                             MaxLength="255"
+                             IsEnabled="{Binding IsCamposHabilitados}"/>
+
+                    <TextBlock Grid.Column="3" Text="CPF:" VerticalAlignment="Center" Margin="2"/>
+
+                    <xctk:MaskedTextBox Grid.Column="4"
+                                        Style="{StaticResource ValidationMaskedStyle}"
+                                        Mask="000,000,000-00"
+                                        Text="{Binding PessoaEdicao.CPF, 
+                                                       UpdateSourceTrigger=PropertyChanged, 
+                                                       ValidatesOnDataErrors=True}"
+                                        ToolTip="CPF no formato 000.000.000-00"
+                                        IsEnabled="{Binding IsCamposHabilitados}" Margin="2,2,31,2"/>
+
+                    <TextBlock Grid.Column="5" Text="Endereço:" VerticalAlignment="Center" Margin="0,0,28,0" Grid.ColumnSpan="2"/>
+                    <TextBox Grid.Column="5"
+                             Style="{StaticResource ValidationTextBoxStyle}"
+                             Text="{Binding PessoaEdicao.Endereco, 
+                                            UpdateSourceTrigger=PropertyChanged, 
+                                            ValidatesOnDataErrors=True}"
+                             ToolTip="Endereço (opcional)"
+                             MaxLength="255"
+                             IsEnabled="{Binding IsCamposHabilitados}" Grid.ColumnSpan="3" Margin="57,3,40,1"/>
+                </Grid>
+
+                <!-- Ações (quebra automática em múltiplas linhas) -->
+                <WrapPanel Grid.Row="1" ItemHeight="32" ItemWidth="140" Margin="0,0,0,4">
+                    <!-- Novo -->
+                    <Button Command="{Binding IncluirCmd}" Margin="0,0,8,8">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Resources/insert.png" Width="16" Height="16" Margin="0,0,6,0"/>
+                            <TextBlock Text="Novo"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!-- Salvar (habilita junto com a edição) -->
+                    <Button Command="{Binding SalvarCmd}" 
+                            IsEnabled="{Binding IsCamposHabilitados}"
+                            Margin="0,0,8,8">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Resources/save.png" Width="16" Height="16" Margin="0,0,6,0"/>
+                            <TextBlock Text="Salvar"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!-- Cancelar edição -->
+                    <Button Command="{Binding CancelarCmd}" 
+                            IsEnabled="{Binding IsCamposHabilitados}"
+                            Margin="0,0,8,8">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Resources/cancel.png" Width="16" Height="16" Margin="0,0,6,0"/>
+                            <TextBlock Text="Cancelar"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!-- Excluir: habilita quando há seleção na grade -->
+                    <Button Command="{Binding ExcluirCmd}" IsEnabled="{Binding IsCamposHabilitados}" Margin="0,0,8,8">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Resources/garbage.png" Width="16" Height="16" Margin="0,0,6,0"/>
+                            <TextBlock Text="Excluir"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!-- Incluir Pedido: habilita quando há seleção na grade -->
+                    <Button Command="{Binding IncluirPedidoCmd}" IsEnabled="{Binding IsCamposHabilitados}" Margin="0,0,8,8">                        
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Resources/insert-order.png" Width="16" Height="16" Margin="0,0,6,0"/>
+                            <TextBlock Text="Incluir Pedido"/>
+                        </StackPanel>
+                    </Button>
+                </WrapPanel>
+            </Grid>
+        </GroupBox>
     </Grid>
 </Window>

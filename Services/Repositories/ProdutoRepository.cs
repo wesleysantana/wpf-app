@@ -8,70 +8,55 @@ namespace WpfApp.Services.Repositories
     public class ProdutoRepository
     {
         private readonly IDataStore _ds;
-        private const string File = "produtos.json";
-        private List<Produto> _listProdutos;
-        private readonly List<string> _listErrors = new List<string>();
-        public IReadOnlyCollection<string> ListErrors => _listErrors;
+        private const string FILE = "produtos.json";
+        private readonly List<Produto> _produtos;
 
         public ProdutoRepository(IDataStore ds)
         {
             _ds = ds;
-            _listProdutos = _ds.Load<Produto>(File);
+            _produtos = _ds.Load<Produto>(FILE).Where(x => x.Ativo).ToList() ?? new List<Produto>();
         }
 
-        public IEnumerable<Produto> Query(string nome = null, string codigo = null, decimal? min = null, decimal? max = null)
+        public IEnumerable<Produto> Query(string nome = null, string codigo = null, 
+            decimal? min = null, decimal? max = null, bool incluirInativos = false)
         {
-            return _listProdutos.Where(p =>
-                (string.IsNullOrWhiteSpace(nome) || p.Nome.IndexOf(nome, StringComparison.OrdinalIgnoreCase) >= 0)
-                &&
-                (string.IsNullOrWhiteSpace(codigo) || p.Codigo.IndexOf(codigo, StringComparison.OrdinalIgnoreCase) >= 0)
-                &&
-                (!min.HasValue || p.Valor >= min.Value)
-                &&
-                (!max.HasValue || p.Valor <= max.Value)
-            );
-        }
-
-        private void ValidaProduto(Produto p)
-        {
-            var resultName = NameValidator.Validator(p.Nome);
-            if (!resultName.Item1) _listErrors.AddRange(resultName.Item2);
-            
-            if (string.IsNullOrWhiteSpace(p.Codigo)) _listErrors.Add("Código obrigatório");
-            
-            if (p.Valor <= 0) _listErrors.Add("Valor inválido");
+            var q = _produtos.AsEnumerable();
+            if (!incluirInativos) q = q.Where(p => p.Ativo);
+            if (!string.IsNullOrWhiteSpace(nome)) q = q.Where(p => p.Nome?.IndexOf(nome, StringComparison.OrdinalIgnoreCase) >= 0);
+            if (!string.IsNullOrWhiteSpace(codigo)) q = q.Where(p => p.Codigo?.IndexOf(codigo, StringComparison.OrdinalIgnoreCase) >= 0);
+            if (min.HasValue) q = q.Where(p => p.Valor >= min.Value);
+            if (max.HasValue) q = q.Where(p => p.Valor <= max.Value);
+            return q;
         }
 
         public Produto Add(Produto p)
         {
-            ValidaProduto(p);
-
-            if (_listErrors.Any()) return null;
-
-            p.Id = _listProdutos.Any() ? _listProdutos.Max(x => x.Id) + 1 : 1;
-            _listProdutos.Add(p); 
-            _ds.Save(File, _listProdutos); 
+            p.Id = _produtos.Any() ? _produtos.Max(x => x.Id) + 1 : 1;
+            p.Ativo = true;
+            _produtos.Add(p);
+            _ds.Save(FILE, _produtos);
             return p;
         }
 
         public Produto Update(Produto p)
         {
-            var idx = _listProdutos.FindIndex(x => x.Id == p.Id); 
-            if (idx < 0) _listErrors.Add("Produto não encontrado");
-
-            ValidaProduto(p);
-
-            if (_listErrors.Any()) return null;
-
-            _listProdutos[idx] = p; _ds.Save(File, _listProdutos);
+            var idx = _produtos.FindIndex(x => x.Id == p.Id);
+            if (idx < 0) return null;
+            _produtos[idx] = p;
+            _ds.Save(FILE, _produtos);
             return p;
         }
 
-        public void Delete(int id) 
-        { 
-            _listProdutos.RemoveAll(x => x.Id == id); 
-            _ds.Save(File, _listProdutos); 
+        // Exclusão lógica
+        public bool SoftDelete(int id)
+        {
+            var p = _produtos.FirstOrDefault(x => x.Id == id);
+            if (p == null) return false;
+            p.Ativo = false;
+            _ds.Save(FILE, _produtos);
+            return true;
         }
-        public List<Produto> All() => _listProdutos.ToList();
+
+        public List<Produto> All() => _produtos.ToList();
     }
 }

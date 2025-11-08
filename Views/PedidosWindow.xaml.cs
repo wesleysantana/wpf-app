@@ -18,7 +18,5 @@ namespace WpfApp.Views
                     vm.CloseRequested += (s2, ok) => { DialogResult = ok; Close(); };
             };
         }
-
-        public string WindowTitle => "Pedidos";
     }
 }

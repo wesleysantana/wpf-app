@@ -3,7 +3,7 @@
 namespace WpfApp.Views
 {
     /// <summary>
-    /// Interaction logic for ProdutosPage.xaml
+    /// Interaction logic for ProdutosWindow.xaml
     /// </summary>
     public partial class ProdutosWindow : Window
     {
@@ -11,7 +11,5 @@ namespace WpfApp.Views
         {
             InitializeComponent();
         }
-
-        public string PageTitle => "Cadastro de Produtos";
     }
 }

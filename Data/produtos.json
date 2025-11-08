@@ -1,0 +1,23 @@
+﻿[
+  {
+    "Id": 1,
+    "Nome": "Notebook Acer",
+    "Codigo": "123",
+    "Valor": 3000.0,
+    "Ativo": true
+  },
+  {
+    "Id": 2,
+    "Nome": "Monitor Samsung",
+    "Codigo": "550",
+    "Valor": 500.0,
+    "Ativo": true
+  },
+  {
+    "Id": 3,
+    "Nome": "Mouse",
+    "Codigo": "854",
+    "Valor": 50.0,
+    "Ativo": false
+  }
+]

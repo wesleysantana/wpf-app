@@ -89,8 +89,8 @@
     <Compile Include="Services\Validators\CpfValidator.cs" />
     <Compile Include="Services\DataStore\IDataStore.cs" />
     <Compile Include="Services\DataStore\JsonDataStore.cs" />
-    <Compile Include="Services\Validators\NameValidator.cs" />
     <Compile Include="Services\Repositories\PessoaRepository .cs" />
+    <Compile Include="Services\Validators\ValidatableModelBase.cs" />
     <Compile Include="ViewModels\Base\BaseViewModel.cs" />
     <Compile Include="ViewModels\Base\RelayCommand.cs" />
     <Compile Include="ViewModels\PedidosViewModel.cs" />
@@ -131,7 +131,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Enums.cs" />
+    <Compile Include="Models\Enums\Enums.cs" />
     <Compile Include="Models\Pedido.cs" />
     <Compile Include="Models\PedidoItem.cs" />
     <Compile Include="Models\Pessoa.cs" />
@@ -197,6 +197,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\insert-order.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\edit.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\MaterialDesignThemes.4.6.0\build\MaterialDesignThemes.targets" Condition="Exists('packages\MaterialDesignThemes.4.6.0\build\MaterialDesignThemes.targets')" />

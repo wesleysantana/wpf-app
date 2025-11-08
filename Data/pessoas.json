@@ -1,0 +1,26 @@
+﻿[
+  {
+    "Id": 1,
+    "Nome": "Wesley Santana",
+    "CPF": "281.967.498-48",
+    "Endereco": null
+  },
+  {
+    "Id": 2,
+    "Nome": "Rita",
+    "CPF": "216.284.158-43",
+    "Endereco": null
+  },
+  {
+    "Id": 3,
+    "Nome": "Pedro",
+    "CPF": "281.967.498-48",
+    "Endereco": "Rua Tito 5"
+  },
+  {
+    "Id": 4,
+    "Nome": "Gabi",
+    "CPF": "216.284.158-43",
+    "Endereco": "Rua Tito Livio Brasil, 70"
+  }
+]

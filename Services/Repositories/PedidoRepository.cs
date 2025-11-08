@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using WpfApp.Models;
 
@@ -8,41 +9,43 @@ namespace WpfApp.Services.Repositories
     {
         private readonly IDataStore _ds;
         private const string File = "pedidos.json";
-        private List<Pedido> _ListPedidos;
-        private readonly List<string> _listErrors = new List<string>();
-        public IReadOnlyCollection<string> ListErrors => _listErrors;
+        private readonly List<Pedido> _listPedidos;
 
-        public PedidoRepository(IDataStore ds) 
-        { 
-            _ds = ds; 
-            _ListPedidos = _ds.Load<Pedido>(File); 
+        public PedidoRepository(IDataStore ds)
+        {
+            _ds = ds ?? throw new ArgumentNullException(nameof(ds));
+            _listPedidos = _ds.Load<Pedido>(File) ?? new List<Pedido>();
         }
 
-        public IEnumerable<Pedido> GetPessoaId(int pessoaId) => _ListPedidos.Where(p => p.PessoaId == pessoaId);
+        public IEnumerable<Pedido> GetByPessoaId(int pessoaId)
+        {
+            return _listPedidos.Where(p => p.PessoaId == pessoaId);
+        }
 
         public Pedido Add(Pedido p)
         {
-            // Finalização definida na VM; aqui apenas persiste
-            p.Id = _ListPedidos.Any() ? _ListPedidos.Max(x => x.Id) + 1 : 1;
-            _ListPedidos.Add(p); 
-            _ds.Save(File, _ListPedidos); 
+            if (p == null)
+                throw new ArgumentNullException(nameof(p));
+
+            p.Id = _listPedidos.Any() ? _listPedidos.Max(x => x.Id) + 1 : 1;
+
+            _listPedidos.Add(p);
+            _ds.Save(File, _listPedidos);
+
             return p;
         }
 
         public void UpdateStatus(int id, StatusPedido status)
         {
-            var p = _ListPedidos.FirstOrDefault(x => x.Id == id);
+            var pedido = _listPedidos.FirstOrDefault(x => x.Id == id);
 
-            if (p == null)
-            {
-                _listErrors.Add("Pedido não encontrado");
-                return;
-            }
-            
-            p.Status = status; 
-            _ds.Save(File, _ListPedidos);
+            if (pedido == null)
+                throw new InvalidOperationException("Pedido não encontrado.");
+
+            pedido.Status = status;
+            _ds.Save(File, _listPedidos);
         }
 
-        public List<Pedido> All() => _ListPedidos.ToList();
+        public List<Pedido> All() => _listPedidos.ToList();
     }
 }

@@ -3,7 +3,7 @@
 namespace WpfApp.Views
 {
     /// <summary>
-    /// Interaction logic for PessoasPage.xaml
+    /// Interaction logic for PessoasWindow.xaml
     /// </summary>
     public partial class PessoasWindow : Window
     {
@@ -11,7 +11,5 @@ namespace WpfApp.Views
         {
             InitializeComponent();
         }
-
-        public string PageTitle => "Cadastro de Pessoas";
     }
 }

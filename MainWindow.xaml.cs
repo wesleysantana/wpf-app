@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using WpfApp.Models;
 using WpfApp.Services;
 using WpfApp.Services.Repositories;
 using WpfApp.ViewModels;
@@ -23,10 +25,19 @@ namespace WpfApp
 
         private void OpenPeople(object s, RoutedEventArgs e)
         {
+            //var win = new PessoasWindow
+            //{
+            //    DataContext = new PessoasViewModel(new PessoaRepository(_ds), new PedidoRepository(_ds)).PessoasCollection,
+            //    Owner = this
+            //};
+            //win.ShowDialog();
+
+            var vm = new PessoasViewModel(new PessoaRepository(_ds), new PedidoRepository(_ds));
+
             var win = new PessoasWindow
             {
-                DataContext = new PessoasViewModel(new PessoaRepository(_ds), new PedidoRepository(_ds)),
-                Owner = this
+                Owner = this,
+                DataContext = vm
             };
             win.ShowDialog();
         }
