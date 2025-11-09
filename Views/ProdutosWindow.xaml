@@ -3,73 +3,122 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         Title="Cadastro de Produtos" Height="620" Width="960"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        Background="#FFF5F5F5">
 
-    <Grid Margin="8">
+    <Window.Resources>
+        <Style x:Key="ModernGroupBox" TargetType="GroupBox">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="16"/>
+            <Setter Property="Margin" Value="8"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#FFE0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Background" Value="#FF1976D2"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="MinWidth" Value="120"/>
+            <Setter Property="Margin" Value="8,4,0,4"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="16,8"/>
+        </Style>
+
+        <Style x:Key="ModernTextBox" TargetType="TextBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#FFE0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Margin" Value="8,4,8,4"/>
+        </Style>
+
+        <Style x:Key="ModernDecimalUpDown" TargetType="{x:Type xctk:DecimalUpDown}">
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#FFE0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="8,4,8,4"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="16">
         <Grid.RowDefinitions>
-            <!-- 1) Filtros -->
             <RowDefinition Height="Auto"/>
-            <!-- 2) Lista -->
             <RowDefinition Height="*"/>
-            <!-- 3) Detalhes + Ações -->
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- (1) FILTROS -->
-        <GroupBox Header="Filtros" Padding="8">
+        <GroupBox Header="Filtros" Style="{StaticResource ModernGroupBox}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="260"/>
-                    <ColumnDefinition Width="12"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="180"/>
-                    <ColumnDefinition Width="12"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="250"/>
+                    <!-- Nome -->
+                    <ColumnDefinition Width="8"/>
+
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="100"/>
+                    <!-- Código -->
+                    <ColumnDefinition Width="8"/>
+                    <!-- Espaço reduzido -->
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="80"/>
+                    <!-- Valor mín -->
+                    <ColumnDefinition Width="8"/>
+                    <!-- Espaço reduzido -->
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="80"/>
+                    <!-- Valor máx -->
                     <ColumnDefinition Width="12"/>
                     <ColumnDefinition Width="Auto"/>
+                    <!-- Botão Filtrar -->
                 </Grid.ColumnDefinitions>
 
-                <Label Content="Nome:" VerticalAlignment="Center"/>
-                <TextBox MaxLength="255"
-                         Text="{Binding FiltroNome, UpdateSourceTrigger=PropertyChanged}"
-                         ToolTip="Digite parte do nome para filtrar" Grid.ColumnSpan="5" Margin="45,0,133,0"/>
+                <TextBlock Text="Nome:" VerticalAlignment="Center" Margin="8,0,8,0" FontWeight="SemiBold"/>
+                <TextBox Grid.Column="1" Style="{StaticResource ModernTextBox}"
+                 MaxLength="255" Height="35"
+                 Text="{Binding FiltroNome, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <Label Grid.Column="4" Content="Código:" VerticalAlignment="Center" Margin="52,0,77,0"/>
-                <TextBox Grid.Column="4" MaxLength="50"
-                         Text="{Binding FiltroCodigo, UpdateSourceTrigger=PropertyChanged}"
-                         ToolTip="Digite parte do código para filtrar" Margin="108,0,0,0"/>
+                <TextBlock Grid.Column="3" Text="Código:" VerticalAlignment="Center" Margin="8,0,8,0" FontWeight="SemiBold"/>
+                <TextBox Grid.Column="4" Style="{StaticResource ModernTextBox}"
+                 MaxLength="50" Height="35"
+                 Text="{Binding FiltroCodigo, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <Label Grid.Column="6" Content="Valor mín.:" VerticalAlignment="Center"/>
-                <xctk:DecimalUpDown Grid.Column="7"
-                                    Value="{Binding FiltroMin, UpdateSourceTrigger=PropertyChanged}"
-                                    FormatString="F2" Minimum="0" Margin="0,0,92,0"/>
+                <TextBlock Grid.Column="6" Text="Mín:" VerticalAlignment="Center" Margin="8,0,8,0" FontWeight="SemiBold"/>
+                <xctk:DecimalUpDown Grid.Column="7" Style="{StaticResource ModernDecimalUpDown}"
+                            Value="{Binding FiltroMin, UpdateSourceTrigger=PropertyChanged}" 
+                            FormatString="F2" Minimum="0" Height="35"/>
 
-                <Label Grid.Column="7" Content="Valor máx.:" VerticalAlignment="Center" Grid.ColumnSpan="2" Margin="80,0,20,0"/>
-                <xctk:DecimalUpDown Grid.Column="7"
-                                    Value="{Binding FiltroMax, UpdateSourceTrigger=PropertyChanged}"
-                                    FormatString="F2" Minimum="0" Grid.ColumnSpan="3" Margin="148,0,117,0"/>
+                <TextBlock Grid.Column="9" Text="Máx:" VerticalAlignment="Center" Margin="8,0,8,0" FontWeight="SemiBold"/>
+                <xctk:DecimalUpDown Grid.Column="10" Style="{StaticResource ModernDecimalUpDown}"
+                            Value="{Binding FiltroMax, UpdateSourceTrigger=PropertyChanged}"
+                            FormatString="F2" Minimum="0" Height="35"/>
 
-                <Button Grid.Column="9" Command="{Binding FiltrarCmd}" Margin="60,0,42,0" Grid.ColumnSpan="3">
+                <Button Grid.Column="12" Command="{Binding FiltrarCmd}" Style="{StaticResource ModernButton}" MinWidth="100">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/Resources/filter.png" Width="16" Height="16" Margin="0,0,6,0"/>
-                        <TextBlock Text="Filtrar"/>
+                        <TextBlock Text="🔍" FontSize="16" Margin="0,0,8,0"/>
+                        <TextBlock Text="Filtrar" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
             </Grid>
         </GroupBox>
 
         <!-- (2) LISTA -->
-        <GroupBox Grid.Row="1" Header="Lista de Produtos" Padding="8" Margin="0,8,0,8">
+        <GroupBox Grid.Row="1" Header="Lista de Produtos" Style="{StaticResource ModernGroupBox}">
             <DataGrid ItemsSource="{Binding ProdutosCollection}"
                       SelectedItem="{Binding ProdutoSelecionado}"
                       AutoGenerateColumns="False"
                       IsReadOnly="True"
                       CanUserAddRows="False"
-                      SelectionMode="Single">
+                      SelectionMode="Single"
+                      Background="White"
+                      BorderBrush="#FFE0E0E0"
+                      BorderThickness="1">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" Width="60"/>
                     <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="*"/>
@@ -80,17 +129,15 @@
         </GroupBox>
 
         <!-- (3) DETALHES + AÇÕES -->
-        <GroupBox Grid.Row="2" Header="Detalhes do Produto Selecionado / Novo Cadastro" Padding="8">
+        <GroupBox Grid.Row="2" Header="Detalhes do Produto Selecionado / Novo Cadastro" Style="{StaticResource ModernGroupBox}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <!-- formulário -->
                     <RowDefinition Height="Auto"/>
-                    <!-- botões -->
                 </Grid.RowDefinitions>
 
                 <!-- Formulário -->
-                <Grid Grid.Row="0" Margin="0,0,0,8">
+                <Grid Grid.Row="0" Margin="0,0,0,16">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="300"/>
@@ -102,51 +149,55 @@
                         <ColumnDefinition Width="140"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="Nome:" VerticalAlignment="Center" Margin="2"/>
-                    <TextBox Grid.Column="1" Margin="2" MaxLength="255"
+                    <TextBlock Text="Nome:" VerticalAlignment="Center" Margin="8,0,8,0" FontWeight="SemiBold"/>
+                    <TextBox Grid.Column="1" Style="{StaticResource ModernTextBox}"
+                             MaxLength="255" Height="35"
                              Text="{Binding ProdutoEdicao.Nome, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                             ToolTip="Nome do produto" IsEnabled="{Binding IsCamposHabilitados}"/>
+                             IsEnabled="{Binding IsCamposHabilitados}"/>
 
-                    <TextBlock Grid.Column="3" Text="Código:" VerticalAlignment="Center" Margin="2"/>
-                    <TextBox Grid.Column="4" Margin="2" MaxLength="50"
+                    <TextBlock Grid.Column="3" Text="Código:" VerticalAlignment="Center" Margin="8,0,8,0" FontWeight="SemiBold"/>
+                    <TextBox Grid.Column="4" Style="{StaticResource ModernTextBox}"
+                             MaxLength="50" Height="35"
                              Text="{Binding ProdutoEdicao.Codigo, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                             ToolTip="Código do produto" IsEnabled="{Binding IsCamposHabilitados}"/>
+                             IsEnabled="{Binding IsCamposHabilitados}"/>
 
-                    <TextBlock Grid.Column="6" Text="Valor:" VerticalAlignment="Center" Margin="2"/>
-                    <xctk:DecimalUpDown Grid.Column="7" Margin="2"
+                    <TextBlock Grid.Column="6" Text="Valor:" VerticalAlignment="Center" Margin="8,0,8,0" FontWeight="SemiBold"/>
+                    <xctk:DecimalUpDown Grid.Column="7" Style="{StaticResource ModernDecimalUpDown}"
                                         Value="{Binding ProdutoEdicao.Valor, UpdateSourceTrigger=PropertyChanged}"
-                                        FormatString="F2" Minimum="0"
+                                        FormatString="F2" Minimum="0" Height="35"
                                         IsEnabled="{Binding IsCamposHabilitados}"/>
                 </Grid>
 
                 <!-- Botões -->
-                <WrapPanel Grid.Row="1" ItemHeight="32" ItemWidth="140" Margin="0,0,0,4">
-                    <Button Command="{Binding IncluirCmd}" Margin="0,0,8,0">
+                <WrapPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
+                    <Button Command="{Binding IncluirCmd}" Style="{StaticResource ModernButton}">
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="/Resources/insert.png" Width="16" Height="16" Margin="0,0,6,0"/>
-                            <TextBlock Text="Novo"/>
+                            <TextBlock Text="➕" FontSize="16" Margin="0,0,8,0"/>
+                            <TextBlock Text="Novo" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
 
-                    <Button Command="{Binding SalvarCmd}" Margin="0,0,8,0" IsEnabled="{Binding IsCamposHabilitados}">
+                    <Button Command="{Binding SalvarCmd}" Style="{StaticResource ModernButton}" 
+                            IsEnabled="{Binding IsCamposHabilitados}">
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="/Resources/save.png" Width="16" Height="16" Margin="0,0,6,0"/>
-                            <TextBlock Text="Salvar"/>
+                            <TextBlock Text="💾" FontSize="16" Margin="0,0,8,0"/>
+                            <TextBlock Text="Salvar" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
 
-                    <Button Command="{Binding CancelarCmd}" Margin="0,0,8,0" IsEnabled="{Binding IsCamposHabilitados}">
+                    <Button Command="{Binding CancelarCmd}" Style="{StaticResource ModernButton}" 
+                            IsEnabled="{Binding IsCamposHabilitados}" Background="#FF757575">
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="/Resources/cancel.png" Width="16" Height="16" Margin="0,0,6,0"/>
-                            <TextBlock Text="Cancelar"/>
+                            <TextBlock Text="❌" FontSize="16" Margin="0,0,8,0"/>
+                            <TextBlock Text="Cancelar" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
 
-                    <!-- Deixe o CanExecute do comando controlar o IsEnabled -->
-                    <Button Command="{Binding ExcluirCmd}" Margin="0,0,8,0">
+                    <Button Command="{Binding ExcluirCmd}" Style="{StaticResource ModernButton}"
+                            Background="#FFD32F2F">
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="/Resources/garbage.png" Width="16" Height="16" Margin="0,0,6,0"/>
-                            <TextBlock Text="Excluir"/>
+                            <TextBlock Text="🗑️" FontSize="16" Margin="0,0,8,0"/>
+                            <TextBlock Text="Excluir" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                 </WrapPanel>

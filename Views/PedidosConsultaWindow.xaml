@@ -2,20 +2,55 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Consulta de Pedidos" Height="520" Width="900"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        Background="#FFF5F5F5">
 
-    <Grid Margin="10">
+    <Window.Resources>
+        <Style x:Key="ModernGroupBox" TargetType="GroupBox">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="16"/>
+            <Setter Property="Margin" Value="8"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#FFE0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Background" Value="#FF1976D2"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="MinWidth" Value="100"/>
+            <Setter Property="Margin" Value="8,4,0,4"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="12,8"/>
+        </Style>
+
+        <Style x:Key="ModernComboBox" TargetType="ComboBox">
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#FFE0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="8,4,8,4"/>
+        </Style>
+
+        <Style x:Key="ActionButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="MinWidth" Value="70"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Filtros -->
             <RowDefinition Height="*"/>
-            <!-- Grid -->
             <RowDefinition Height="Auto"/>
-            <!-- Rodapé -->
         </Grid.RowDefinitions>
 
         <!-- FILTROS -->
-        <GroupBox Header="Filtros" Padding="8">
+        <GroupBox Header="Filtros" Style="{StaticResource ModernGroupBox}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -29,32 +64,32 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Label Content="Pessoa:" VerticalAlignment="Center"/>
-                <ComboBox Grid.Column="1"
+                <TextBlock Text="Pessoa:" VerticalAlignment="Center" Margin="8,0,8,0" FontWeight="SemiBold"/>
+                <ComboBox Grid.Column="1" Style="{StaticResource ModernComboBox}"
                           ItemsSource="{Binding PessoasCollection}"
                           SelectedItem="{Binding PessoaSelecionada}"
                           DisplayMemberPath="Nome"
-                          IsSynchronizedWithCurrentItem="True"/>
+                          IsSynchronizedWithCurrentItem="True" Height="25"/>
 
                 <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
-                    <CheckBox Content="Pendentes"   IsChecked="{Binding IsPendentes}" Margin="0,0,10,0"/>
-                    <CheckBox Content="Pagos"     IsChecked="{Binding IsPagos}"     Margin="0,0,10,0"/>
-                    <CheckBox Content="Enviados"   IsChecked="{Binding IsEnviados}" Margin="0,0,10,0"/>
+                    <CheckBox Content="Pendentes" IsChecked="{Binding IsPendentes}" Margin="0,0,10,0"/>
+                    <CheckBox Content="Pagos" IsChecked="{Binding IsPagos}" Margin="0,0,10,0"/>
+                    <CheckBox Content="Enviados" IsChecked="{Binding IsEnviados}" Margin="0,0,10,0"/>
                     <CheckBox Content="Recebidos" IsChecked="{Binding IsRecebidos}" Margin="0,0,10,0"/>
                 </StackPanel>
 
-                <Label Content="Pagto:" VerticalAlignment="Center" Grid.Column="5"/>
-                <ComboBox Grid.Column="6" Margin="0,0,10,0"
+                <TextBlock Grid.Column="5" Text="Pagto:" VerticalAlignment="Center" Margin="8,0,8,0" FontWeight="SemiBold"/>
+                <ComboBox Grid.Column="6" Style="{StaticResource ModernComboBox}" Margin="0,0,10,0"
                     ItemsSource="{Binding PagamentosFiltro}"
                     DisplayMemberPath="Key"
                     SelectedValuePath="Value"
                     SelectedValue="{Binding FiltroFormaPagamento, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <StackPanel Grid.Column="7" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Command="{Binding FiltrarCmd}" Margin="4,0,8,0" Width="57">
+                    <Button Command="{Binding FiltrarCmd}" Style="{StaticResource ModernButton}">
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="/Resources/filter.png" Width="16" Height="16" Margin="0,0,6,0"/>
-                            <TextBlock Text="Filtrar"/>
+                            <TextBlock Text="🔍" FontSize="16" Margin="0,0,8,0"/>
+                            <TextBlock Text="Filtrar" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -62,37 +97,40 @@
         </GroupBox>
 
         <!-- GRID -->
-        <GroupBox Grid.Row="1" Header="Pedidos" Padding="8" Margin="0,8,0,8">
+        <GroupBox Grid.Row="1" Header="Pedidos" Style="{StaticResource ModernGroupBox}">
             <DataGrid ItemsSource="{Binding PedidosCollection}"
                 AutoGenerateColumns="False"
                 IsReadOnly="True"
                 CanUserAddRows="False"
                 CanUserDeleteRows="False"
                 SelectionMode="Single"
-                SelectionUnit="FullRow">
+                SelectionUnit="FullRow"
+                Background="White"
+                BorderBrush="#FFE0E0E0"
+                BorderThickness="1">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Data"
                             Binding="{Binding DataVenda, StringFormat=\{0:dd/MM/yyyy\}}"
-                            Width="100"/>
+                            Width="80"/>
                     <DataGridTextColumn Header="Pessoa" Binding="{Binding PessoaNome}" Width="*"/>
                     <DataGridTextColumn Header="Valor Total"
                             Binding="{Binding ValorTotal, StringFormat=\{0:C2\},ConverterCulture='pt-BR'}"
-                            Width="110"/>
-                    <DataGridTextColumn Header="Pagamento" Binding="{Binding FormaPagamento}" Width="110"/>
+                            Width="80"/>
+                    <DataGridTextColumn Header="Pagamento" Binding="{Binding FormaPagamento}" Width="80"/>
                     <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="90"/>
-                    <DataGridTemplateColumn Header="Ações" Width="220">
+                    <DataGridTemplateColumn Header="Ações" Width="235">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Content="Pago"
-                                Command="{Binding DataContext.MarcarPagoCmd, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                CommandParameter="{Binding Id}" Margin="0,0,6,0"/>
-                                    <Button Content="Enviado"
-                                Command="{Binding DataContext.MarcarEnviadoCmd, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                CommandParameter="{Binding Id}" Margin="0,0,6,0"/>
-                                    <Button Content="Recebido"
-                                Command="{Binding DataContext.MarcarRecebidoCmd, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                CommandParameter="{Binding Id}"/>
+                                    <Button Content="Pago" Style="{StaticResource ActionButton}" Background="#FF388E3C"
+                                        Command="{Binding DataContext.MarcarPagoCmd, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding Id}" Margin="0,0,2,0" Height="25"/>
+                                    <Button Content="Enviado" Style="{StaticResource ActionButton}"
+                                        Command="{Binding DataContext.MarcarEnviadoCmd, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding Id}" Margin="0,0,2,0" Height="25"/>
+                                    <Button Content="Recebido" Style="{StaticResource ActionButton}" Background="#FF7B1FA2"
+                                        Command="{Binding DataContext.MarcarRecebidoCmd, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding Id}" Margin="0,0,2,0" Height="25"/>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -102,26 +140,22 @@
         </GroupBox>
 
         <!-- RODAPÉ -->
-        <!-- RODAPÉ -->
-        <DockPanel Grid.Row="2" LastChildFill="False" Margin="0,4,0,0">
-            <!-- À ESQUERDA: totais -->
+        <DockPanel Grid.Row="2" LastChildFill="False" Margin="0,8,0,0">
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
                 <TextBlock Text="{Binding TotalPedidos, StringFormat=Total de pedidos: {0}}"
-               VerticalAlignment="Center" Margin="0,0,12,0"/>
+               VerticalAlignment="Center" Margin="0,0,12,0" FontWeight="SemiBold"/>
                 <TextBlock Text="{Binding TotalValorPedidos, StringFormat=Valor total: {0:C2},ConverterCulture='pt-BR'}"
-               FontWeight="Bold" VerticalAlignment="Center"/>
+               FontWeight="Bold" VerticalAlignment="Center" Foreground="#FF1976D2"/>
             </StackPanel>
 
-            <!-- À DIREITA: botão Novo Pedido -->
-            <Button DockPanel.Dock="Right"
+            <Button DockPanel.Dock="Right" Style="{StaticResource ModernButton}"
                 Command="{Binding NovoPedidoCmd}"
                 IsEnabled="{Binding PodeNovoPedido}">
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="/Resources/insert-order.png" Width="16" Height="16" Margin="0,0,6,0"/>
-                    <TextBlock Text="Novo Pedido"/>
+                    <TextBlock Text="📥" FontSize="16" Margin="0,0,8,0"/>
+                    <TextBlock Text="Novo Pedido" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
         </DockPanel>
-
     </Grid>
 </Window>

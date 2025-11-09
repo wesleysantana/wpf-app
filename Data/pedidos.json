@@ -15,7 +15,7 @@
     "ValorTotal": 3020.55,
     "DataVenda": "2025-11-09T15:26:31.2362446-03:00",
     "FormaPagamento": "Dinheiro",
-    "Status": "Pendente",
+    "Status": "Pago",
     "Finalizado": true
   },
   {
@@ -78,6 +78,51 @@
     ],
     "ValorTotal": 500.0,
     "DataVenda": "2025-11-09T15:54:43.9522866-03:00",
+    "FormaPagamento": "Cartao",
+    "Status": "Pendente",
+    "Finalizado": true
+  },
+  {
+    "Id": 5,
+    "PessoaId": 1,
+    "PessoaNome": "Wesley",
+    "Itens": [
+      {
+        "ProdutoId": 2,
+        "ProdutoNome": "Monitor",
+        "ValorUnitario": 500.0,
+        "Quantidade": 2,
+        "Subtotal": 1000.0
+      },
+      {
+        "ProdutoId": 3,
+        "ProdutoNome": "Mouse",
+        "ValorUnitario": 25.3,
+        "Quantidade": 1,
+        "Subtotal": 25.3
+      }
+    ],
+    "ValorTotal": 1025.3,
+    "DataVenda": "2025-11-09T17:34:45.2734795-03:00",
+    "FormaPagamento": "Dinheiro",
+    "Status": "Pendente",
+    "Finalizado": true
+  },
+  {
+    "Id": 6,
+    "PessoaId": 2,
+    "PessoaNome": "Rita Santana",
+    "Itens": [
+      {
+        "ProdutoId": 3,
+        "ProdutoNome": "Mouse",
+        "ValorUnitario": 25.3,
+        "Quantidade": 1,
+        "Subtotal": 25.3
+      }
+    ],
+    "ValorTotal": 25.3,
+    "DataVenda": "2025-11-09T17:39:35.4397073-03:00",
     "FormaPagamento": "Cartao",
     "Status": "Pendente",
     "Finalizado": true

@@ -12,5 +12,19 @@
     "Codigo": "26",
     "Valor": 500.0,
     "Ativo": true
+  },
+  {
+    "Id": 3,
+    "Nome": "Mouse",
+    "Codigo": "64",
+    "Valor": 25.3,
+    "Ativo": true
+  },
+  {
+    "Id": 4,
+    "Nome": "Teste",
+    "Codigo": "213",
+    "Valor": 10.0,
+    "Ativo": false
   }
 ]

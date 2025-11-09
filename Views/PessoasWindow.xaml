@@ -3,36 +3,54 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         Title="Cadastro de Pessoas" Height="620" Width="960"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        Background="#FFF5F5F5">
 
     <Window.Resources>
-        <!-- Borda vermelha + tooltip quando houver erro de validação -->
-        <Style x:Key="ValidationTextBoxStyle" TargetType="TextBox">
-            <Setter Property="Margin" Value="2"/>
-            <Setter Property="ToolTip" Value="{Binding (Validation.Errors)[0].ErrorContent, 
-                                                      RelativeSource={RelativeSource Self}}"/>
-            <Style.Triggers>
-                <Trigger Property="Validation.HasError" Value="True">
-                    <Setter Property="BorderBrush" Value="Red"/>
-                    <Setter Property="BorderThickness" Value="1.5"/>
-                </Trigger>
-            </Style.Triggers>
+        <!-- Estilo simples para GroupBox -->
+        <Style x:Key="ModernGroupBox" TargetType="GroupBox">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="16"/>
+            <Setter Property="Margin" Value="8"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#FFE0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
         </Style>
 
-        <Style x:Key="ValidationMaskedStyle" TargetType="{x:Type xctk:MaskedTextBox}">
-            <Setter Property="Margin" Value="2"/>
-            <Setter Property="ToolTip" Value="{Binding (Validation.Errors)[0].ErrorContent, 
-                                                      RelativeSource={RelativeSource Self}}"/>
-            <Style.Triggers>
-                <Trigger Property="Validation.HasError" Value="True">
-                    <Setter Property="BorderBrush" Value="Red"/>
-                    <Setter Property="BorderThickness" Value="1.5"/>
-                </Trigger>
-            </Style.Triggers>
+        <!-- Estilo simples para botões -->
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Background" Value="#FF1976D2"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="MinWidth" Value="120"/>
+            <Setter Property="Margin" Value="8,4,0,4"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="16,8"/>
+        </Style>
+
+        <!-- Estilo simples para TextBox -->
+        <Style x:Key="ModernTextBox" TargetType="TextBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#FFE0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Margin" Value="8,4,8,4"/>
+        </Style>
+
+        <!-- Estilo simples para MaskedTextBox -->
+        <Style x:Key="ModernMaskedTextBox" TargetType="{x:Type xctk:MaskedTextBox}">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#FFE0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Margin" Value="8,4,8,4"/>
         </Style>
     </Window.Resources>
 
-    <Grid Margin="8">
+    <Grid Margin="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -40,42 +58,44 @@
         </Grid.RowDefinitions>
 
         <!-- (1) FILTROS -->
-        <GroupBox Header="Filtros" Padding="8">
+        <GroupBox Header="Filtros" Style="{StaticResource ModernGroupBox}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="260"/>
-                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="16"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="160"/>
-                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="16"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Label Content="Nome:" VerticalAlignment="Center"/>
-                <TextBox Grid.Column="1" MaxLength="255"
-                         Text="{Binding FiltroNome, UpdateSourceTrigger=PropertyChanged}"
-                         ToolTip="Digite parte do nome para filtrar"/>
+                <TextBlock Text="Nome:" VerticalAlignment="Center" Margin="8,0,8,0" FontWeight="SemiBold"/>
+                <TextBox Grid.Column="1" 
+                         Style="{StaticResource ModernTextBox}"
+                         MaxLength="255"
+                         Text="{Binding FiltroNome, UpdateSourceTrigger=PropertyChanged}" Height="35"/>
 
-                <Label Grid.Column="3" Content="CPF:" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="3" Text="CPF:" VerticalAlignment="Center" Margin="8,0,8,0" FontWeight="SemiBold"/>
 
-                <!-- Máscara de CPF: use pontos e traço -->
                 <xctk:MaskedTextBox Grid.Column="4"
-                                    Mask="000,000,000-00"
-                                    Text="{Binding FiltroCpf, UpdateSourceTrigger=PropertyChanged}"
-                                    ToolTip="Digite o CPF para filtrar"/>
+                                    Style="{StaticResource ModernMaskedTextBox}"
+                                    Mask="000,000,000-00" Height="35"
+                                    Text="{Binding FiltroCpf, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <Button Grid.Column="6" Command="{Binding FiltrarCmd}">
+                <Button Grid.Column="6" 
+                        Command="{Binding FiltrarCmd}"
+                        Style="{StaticResource ModernButton}">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/Resources/filter.png" Width="16" Height="16" Margin="0,0,6,0"/>
-                        <TextBlock Text="Filtrar"/>
+                        <TextBlock Text="🔍" FontSize="16" Margin="0,0,8,0"/>
+                        <TextBlock Text="Filtrar" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
             </Grid>
         </GroupBox>
 
         <!-- (2) LISTA (GRID)  -->
-        <GroupBox Grid.Row="1" Header="Lista de Pessoas" Padding="8" Margin="0,8,0,8">
+        <GroupBox Grid.Row="1" Header="Lista de Pessoas" Style="{StaticResource ModernGroupBox}">
             <DataGrid ItemsSource="{Binding PessoasCollection}"
                       SelectedItem="{Binding PessoaSelecionada, Mode=TwoWay}"
                       AutoGenerateColumns="False"
@@ -94,14 +114,14 @@
         </GroupBox>
 
         <!-- (3) DETALHES + AÇÕES -->
-        <GroupBox Grid.Row="2" Header="Detalhes da Pessoa Selecionada / Novo Cadastro" Padding="8">
+        <GroupBox Grid.Row="2" Header="Detalhes da Pessoa Selecionada / Novo Cadastro" Style="{StaticResource ModernGroupBox}">
             <Grid>
-                <Grid.RowDefinitions>                    
+                <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                
-                <Grid Grid.Row="0" Margin="0,0,0,8">
+
+                <Grid Grid.Row="0" Margin="0,0,0,16">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="260"/>
@@ -110,85 +130,92 @@
                         <ColumnDefinition Width="160"/>
                         <ColumnDefinition Width="24"/>
                         <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="340"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="Nome:" VerticalAlignment="Center" Margin="2"/>
+                    <TextBlock Text="Nome:" VerticalAlignment="Center" Margin="8,0,8,0" FontWeight="SemiBold"/>
                     <TextBox Grid.Column="1"
-                             Style="{StaticResource ValidationTextBoxStyle}"
+                             Style="{StaticResource ModernTextBox}"
                              Text="{Binding PessoaEdicao.Nome, 
                                             UpdateSourceTrigger=PropertyChanged, 
                                             ValidatesOnDataErrors=True}"
-                             ToolTip="Nome completo"
-                             MaxLength="255"
+                             MaxLength="255" Height="35"
                              IsEnabled="{Binding IsCamposHabilitados}"/>
 
-                    <TextBlock Grid.Column="3" Text="CPF:" VerticalAlignment="Center" Margin="2"/>
+                    <TextBlock Grid.Column="3" Text="CPF:" VerticalAlignment="Center" Margin="8,0,8,0" FontWeight="SemiBold"/>
 
-                    <xctk:MaskedTextBox Grid.Column="4"
-                                        Style="{StaticResource ValidationMaskedStyle}"
+                    <xctk:MaskedTextBox Grid.Column="4" Height="35"
+                                        Style="{StaticResource ModernMaskedTextBox}"
                                         Mask="000,000,000-00"
                                         Text="{Binding PessoaEdicao.CPF, 
                                                        UpdateSourceTrigger=PropertyChanged, 
                                                        ValidatesOnDataErrors=True}"
-                                        ToolTip="CPF no formato 000.000.000-00"
-                                        IsEnabled="{Binding IsCamposHabilitados}" Margin="2,2,31,2"/>
+                                        IsEnabled="{Binding IsCamposHabilitados}"/>
 
-                    <TextBlock Grid.Column="5" Text="Endereço:" VerticalAlignment="Center" Margin="0,0,28,0" Grid.ColumnSpan="2"/>
-                    <TextBox Grid.Column="5"
-                             Style="{StaticResource ValidationTextBoxStyle}"
+                    <TextBlock Grid.Column="6" Text="Endereço:" VerticalAlignment="Center" Margin="8,0,8,0" FontWeight="SemiBold"/>
+                    <TextBox Grid.Column="7"
+                             Style="{StaticResource ModernTextBox}"
                              Text="{Binding PessoaEdicao.Endereco, 
                                             UpdateSourceTrigger=PropertyChanged, 
                                             ValidatesOnDataErrors=True}"
-                             ToolTip="Endereço (opcional)"
-                             MaxLength="255"
-                             IsEnabled="{Binding IsCamposHabilitados}" Grid.ColumnSpan="3" Margin="57,3,40,1"/>
+                             MaxLength="255" Height="35"
+                             IsEnabled="{Binding IsCamposHabilitados}"/>
                 </Grid>
-                
-                <WrapPanel Grid.Row="1" ItemHeight="32" ItemWidth="140" Margin="0,0,0,4">                    
-                    <Button Command="{Binding IncluirCmd}" Margin="0,0,8,8">
+
+                <WrapPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
+                    <Button Command="{Binding IncluirCmd}" Style="{StaticResource ModernButton}">
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="/Resources/insert.png" Width="16" Height="16" Margin="0,0,6,0"/>
-                            <TextBlock Text="Novo"/>
-                        </StackPanel>
-                    </Button>
-                    
-                    <Button Command="{Binding SalvarCmd}" 
-                            IsEnabled="{Binding IsCamposHabilitados}"
-                            Margin="0,0,8,8">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="/Resources/save.png" Width="16" Height="16" Margin="0,0,6,0"/>
-                            <TextBlock Text="Salvar"/>
-                        </StackPanel>
-                    </Button>
-                   
-                    <Button Command="{Binding CancelarCmd}" 
-                            IsEnabled="{Binding IsCamposHabilitados}"
-                            Margin="0,0,8,8">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="/Resources/cancel.png" Width="16" Height="16" Margin="0,0,6,0"/>
-                            <TextBlock Text="Cancelar"/>
-                        </StackPanel>
-                    </Button>
-                    
-                    <Button Command="{Binding ExcluirCmd}" IsEnabled="{Binding IsCamposHabilitados}" Margin="0,0,8,8">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="/Resources/garbage.png" Width="16" Height="16" Margin="0,0,6,0"/>
-                            <TextBlock Text="Excluir"/>
-                        </StackPanel>
-                    </Button>
-                    
-                    <Button Command="{Binding IncluirPedidoCmd}" IsEnabled="{Binding IsCamposHabilitados}" Margin="0,0,8,8">                        
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="/Resources/insert-order.png" Width="16" Height="16" Margin="0,0,6,0"/>
-                            <TextBlock Text="Incluir Pedido"/>
+                            <TextBlock Text="➕" FontSize="16" Margin="0,0,8,0"/>
+                            <TextBlock Text="Novo" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
 
-                    <Button Command="{Binding ConsultaPedidosCmd}" IsEnabled="{Binding IsCamposHabilitados}" Margin="0,0,8,8">
+                    <Button Command="{Binding SalvarCmd}" 
+                            IsEnabled="{Binding IsCamposHabilitados}"
+                            Style="{StaticResource ModernButton}">
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="/Resources/find.png" Width="16" Height="16" Margin="0,0,6,0"/>
-                            <TextBlock Text="Ver Pedidos"/>
+                            <TextBlock Text="💾" FontSize="16" Margin="0,0,8,0"/>
+                            <TextBlock Text="Salvar" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Command="{Binding CancelarCmd}" 
+                            IsEnabled="{Binding IsCamposHabilitados}"
+                            Style="{StaticResource ModernButton}"
+                            Background="#FF757575">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="❌" FontSize="16" Margin="0,0,8,0"/>
+                            <TextBlock Text="Cancelar" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Command="{Binding ExcluirCmd}" 
+                            IsEnabled="{Binding IsCamposHabilitados}" 
+                            Style="{StaticResource ModernButton}"
+                            Background="#FFD32F2F">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🗑️" FontSize="16" Margin="0,0,8,0"/>
+                            <TextBlock Text="Excluir" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Command="{Binding IncluirPedidoCmd}" 
+                            IsEnabled="{Binding IsCamposHabilitados}" 
+                            Style="{StaticResource ModernButton}"
+                            Background="#FF388E3C">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📥" FontSize="16" Margin="0,0,8,0"/>
+                            <TextBlock Text="Incluir Pedido" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Command="{Binding ConsultaPedidosCmd}" 
+                            IsEnabled="{Binding IsCamposHabilitados}" 
+                            Style="{StaticResource ModernButton}"
+                            Background="#FF7B1FA2">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🔍" FontSize="16" Margin="0,0,8,0"/>
+                            <TextBlock Text="Ver Pedidos" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                 </WrapPanel>
