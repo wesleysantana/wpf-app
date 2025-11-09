@@ -17,17 +17,21 @@ namespace WpfApp.Services.Repositories
             _listPedidos = _ds.Load<Pedido>(File) ?? new List<Pedido>();
         }
 
-        public IEnumerable<Pedido> GetByPessoaId(int pessoaId)
+        public IEnumerable<Pedido> GetPessoaId(int pessoaId)
         {
             return _listPedidos.Where(p => p.PessoaId == pessoaId);
-        }
+        }        
 
         public Pedido Add(Pedido p)
         {
             if (p == null)
                 throw new ArgumentNullException(nameof(p));
 
-            p.Id = _listPedidos.Any() ? _listPedidos.Max(x => x.Id) + 1 : 1;
+            // Defensivo: se vier sem status, nasce como Pendente
+            if (p.Status == default)
+                p.Status = StatusPedido.Pendente;
+
+            p.Id = _listPedidos.Any() ? _listPedidos.Max(x => x.Id) + 1 : 1;           
 
             _listPedidos.Add(p);
             _ds.Save(File, _listPedidos);

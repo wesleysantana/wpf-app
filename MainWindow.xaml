@@ -31,6 +31,12 @@
                     <TextBlock Text="Pedidos" Margin="2,0,2,0"/>
                 </StackPanel>
             </Button>
+            <Button Click="OpenConsultationOrders" Margin="2">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Resources/find.png" Width="16" Height="16" Margin="2,0,2,0"/>
+                    <TextBlock Text="Ver Pedidos" Margin="2,0,2,0"/>
+                </StackPanel>
+            </Button>
         </StackPanel>
         <Image x:Name="imgBenner" 
                Width="452" 

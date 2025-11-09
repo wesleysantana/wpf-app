@@ -34,11 +34,8 @@
 
     <Grid Margin="8">
         <Grid.RowDefinitions>
-            <!-- 1) Filtros -->
             <RowDefinition Height="Auto"/>
-            <!-- 2) Lista -->
             <RowDefinition Height="*"/>
-            <!-- 3) Detalhes + Ações -->
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
@@ -99,14 +96,11 @@
         <!-- (3) DETALHES + AÇÕES -->
         <GroupBox Grid.Row="2" Header="Detalhes da Pessoa Selecionada / Novo Cadastro" Padding="8">
             <Grid>
-                <Grid.RowDefinitions>
-                    <!-- Formulário -->
+                <Grid.RowDefinitions>                    
                     <RowDefinition Height="Auto"/>
-                    <!-- Botões (com quebra automática) -->
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-
-                <!-- Formulário de detalhes (bind em PessoaEdicao) -->
+                
                 <Grid Grid.Row="0" Margin="0,0,0,8">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -150,18 +144,15 @@
                              MaxLength="255"
                              IsEnabled="{Binding IsCamposHabilitados}" Grid.ColumnSpan="3" Margin="57,3,40,1"/>
                 </Grid>
-
-                <!-- Ações (quebra automática em múltiplas linhas) -->
-                <WrapPanel Grid.Row="1" ItemHeight="32" ItemWidth="140" Margin="0,0,0,4">
-                    <!-- Novo -->
+                
+                <WrapPanel Grid.Row="1" ItemHeight="32" ItemWidth="140" Margin="0,0,0,4">                    
                     <Button Command="{Binding IncluirCmd}" Margin="0,0,8,8">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="/Resources/insert.png" Width="16" Height="16" Margin="0,0,6,0"/>
                             <TextBlock Text="Novo"/>
                         </StackPanel>
                     </Button>
-
-                    <!-- Salvar (habilita junto com a edição) -->
+                    
                     <Button Command="{Binding SalvarCmd}" 
                             IsEnabled="{Binding IsCamposHabilitados}"
                             Margin="0,0,8,8">
@@ -170,8 +161,7 @@
                             <TextBlock Text="Salvar"/>
                         </StackPanel>
                     </Button>
-
-                    <!-- Cancelar edição -->
+                   
                     <Button Command="{Binding CancelarCmd}" 
                             IsEnabled="{Binding IsCamposHabilitados}"
                             Margin="0,0,8,8">
@@ -180,20 +170,25 @@
                             <TextBlock Text="Cancelar"/>
                         </StackPanel>
                     </Button>
-
-                    <!-- Excluir: habilita quando há seleção na grade -->
+                    
                     <Button Command="{Binding ExcluirCmd}" IsEnabled="{Binding IsCamposHabilitados}" Margin="0,0,8,8">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="/Resources/garbage.png" Width="16" Height="16" Margin="0,0,6,0"/>
                             <TextBlock Text="Excluir"/>
                         </StackPanel>
                     </Button>
-
-                    <!-- Incluir Pedido: habilita quando há seleção na grade -->
+                    
                     <Button Command="{Binding IncluirPedidoCmd}" IsEnabled="{Binding IsCamposHabilitados}" Margin="0,0,8,8">                        
                         <StackPanel Orientation="Horizontal">
                             <Image Source="/Resources/insert-order.png" Width="16" Height="16" Margin="0,0,6,0"/>
                             <TextBlock Text="Incluir Pedido"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Command="{Binding ConsultaPedidosCmd}" IsEnabled="{Binding IsCamposHabilitados}" Margin="0,0,8,8">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Resources/find.png" Width="16" Height="16" Margin="0,0,6,0"/>
+                            <TextBlock Text="Ver Pedidos"/>
                         </StackPanel>
                     </Button>
                 </WrapPanel>

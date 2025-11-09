@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using WpfApp.Models;
 using WpfApp.Services;
 using WpfApp.Services.Repositories;
 using WpfApp.ViewModels;
@@ -25,14 +23,7 @@ namespace WpfApp
 
         private void OpenPeople(object s, RoutedEventArgs e)
         {
-            //var win = new PessoasWindow
-            //{
-            //    DataContext = new PessoasViewModel(new PessoaRepository(_ds), new PedidoRepository(_ds)).PessoasCollection,
-            //    Owner = this
-            //};
-            //win.ShowDialog();
-
-            var vm = new PessoasViewModel(new PessoaRepository(_ds), new PedidoRepository(_ds));
+            var vm = new PessoasViewModel(new PessoaRepository(_ds), new PedidoRepository(_ds), new ProdutoRepository(_ds));
 
             var win = new PessoasWindow
             {
@@ -57,6 +48,21 @@ namespace WpfApp
             var win = new PedidosWindow
             {
                 DataContext = new PedidosViewModel(
+                    new PessoaRepository(_ds),
+                    new PedidoRepository(_ds),
+                    new ProdutoRepository(_ds)
+                ),
+                Owner = this
+            };
+            win.ShowDialog();
+        }
+
+        private void OpenConsultationOrders(object s, RoutedEventArgs e)
+        {
+            var win = new Views.PedidosConsultaWindow
+            {
+                DataContext = new PedidosConsultaViewModel(
+                    new PessoaRepository(_ds),
                     new PedidoRepository(_ds),
                     new ProdutoRepository(_ds)
                 ),
@@ -66,13 +72,13 @@ namespace WpfApp
         }
 
         private void CarregarImagemBenner()
-        {            
-            string caminhoUri = "/Resources/Benner.png";
-           
-            Uri uriImagem = new Uri(caminhoUri, UriKind.Relative);
-            
+        {
+            string caminhoUri = "pack://application:,,,/Resources/Benner.png";
+
+            Uri uriImagem = new Uri(caminhoUri, UriKind.Absolute);
+
             BitmapImage bitmap = new BitmapImage(uriImagem);
-            
+
             imgBenner.Source = bitmap;
         }
     }

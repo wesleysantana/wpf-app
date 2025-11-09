@@ -17,6 +17,8 @@ namespace WpfApp.Services
             _listPessoas = _ds.Load<Pessoa>(FILE) ?? new List<Pessoa>();
         }
 
+        public Pessoa GetPessoaCPF(string cpf) => _listPessoas.Where(p => p.CPF == cpf).FirstOrDefault();
+        
         public IEnumerable<Pessoa> Query(string nome = null, string cpf = null)
         {
             return _listPessoas.Where(p =>

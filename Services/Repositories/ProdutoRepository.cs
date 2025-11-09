@@ -17,7 +17,7 @@ namespace WpfApp.Services.Repositories
             _produtos = _ds.Load<Produto>(FILE).Where(x => x.Ativo).ToList() ?? new List<Produto>();
         }
 
-        public IEnumerable<Produto> Query(string nome = null, string codigo = null, 
+        public IEnumerable<Produto> Query(string nome = null, string codigo = null,
             decimal? min = null, decimal? max = null, bool incluirInativos = false)
         {
             var q = _produtos.AsEnumerable();
@@ -28,6 +28,8 @@ namespace WpfApp.Services.Repositories
             if (max.HasValue) q = q.Where(p => p.Valor <= max.Value);
             return q;
         }
+
+        public Produto GetByCodigo(string codigo) => _produtos.FirstOrDefault(p => p.Codigo == codigo);
 
         public Produto Add(Produto p)
         {

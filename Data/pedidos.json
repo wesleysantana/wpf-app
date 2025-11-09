@@ -1,0 +1,85 @@
+﻿[
+  {
+    "Id": 1,
+    "PessoaId": 1,
+    "PessoaNome": "Wesley",
+    "Itens": [
+      {
+        "ProdutoId": 1,
+        "ProdutoNome": "Notebook",
+        "ValorUnitario": 3020.55,
+        "Quantidade": 1,
+        "Subtotal": 3020.55
+      }
+    ],
+    "ValorTotal": 3020.55,
+    "DataVenda": "2025-11-09T15:26:31.2362446-03:00",
+    "FormaPagamento": "Dinheiro",
+    "Status": "Pendente",
+    "Finalizado": true
+  },
+  {
+    "Id": 2,
+    "PessoaId": 2,
+    "PessoaNome": "Rita Santana",
+    "Itens": [
+      {
+        "ProdutoId": 1,
+        "ProdutoNome": "Notebook",
+        "ValorUnitario": 3020.55,
+        "Quantidade": 1,
+        "Subtotal": 3020.55
+      },
+      {
+        "ProdutoId": 2,
+        "ProdutoNome": "Monitor",
+        "ValorUnitario": 500.0,
+        "Quantidade": 1,
+        "Subtotal": 500.0
+      }
+    ],
+    "ValorTotal": 3520.55,
+    "DataVenda": "2025-11-09T15:39:23.3507858-03:00",
+    "FormaPagamento": "Dinheiro",
+    "Status": "Pendente",
+    "Finalizado": true
+  },
+  {
+    "Id": 3,
+    "PessoaId": 1,
+    "PessoaNome": "Wesley",
+    "Itens": [
+      {
+        "ProdutoId": 2,
+        "ProdutoNome": "Monitor",
+        "ValorUnitario": 500.0,
+        "Quantidade": 2,
+        "Subtotal": 1000.0
+      }
+    ],
+    "ValorTotal": 1000.0,
+    "DataVenda": "2025-11-09T15:39:33.2385455-03:00",
+    "FormaPagamento": "Dinheiro",
+    "Status": "Pendente",
+    "Finalizado": true
+  },
+  {
+    "Id": 4,
+    "PessoaId": 2,
+    "PessoaNome": "Rita Santana",
+    "Itens": [
+      {
+        "ProdutoId": 2,
+        "ProdutoNome": "Monitor",
+        "ValorUnitario": 500.0,
+        "Quantidade": 1,
+        "Subtotal": 500.0
+      }
+    ],
+    "ValorTotal": 500.0,
+    "DataVenda": "2025-11-09T15:54:43.9522866-03:00",
+    "FormaPagamento": "Cartao",
+    "Status": "Pendente",
+    "Finalizado": true
+  }
+]

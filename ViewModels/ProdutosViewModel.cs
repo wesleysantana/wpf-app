@@ -7,15 +7,16 @@ using System.Windows.Input;
 using WpfApp.Models;
 using WpfApp.Services.Repositories;
 using WpfApp.ViewModels.Base;
+using WpfApp.ViewModels.Helpers;
 
 namespace WpfApp.ViewModels
 {
     public class ProdutosViewModel : BaseViewModel
     {
-        private readonly ProdutoRepository _repo;
+        private readonly ProdutoRepository _produtoRepo;
         private bool _isNovo;
 
-        public ObservableCollection<Produto> ProdutosCollection { get; } = new ObservableCollection<Produto>();
+        public ObservableRangeCollection<Produto> ProdutosCollection { get; } = new ObservableRangeCollection<Produto>();
 
         // Filtros
         public string FiltroNome { get; set; }
@@ -84,7 +85,7 @@ namespace WpfApp.ViewModels
 
         public ProdutosViewModel(ProdutoRepository repo)
         {
-            _repo = repo;
+            _produtoRepo = repo;
 
             FiltrarCmd = new RelayCommand(_ => CarregarProdutos());
             LimparFiltrosCmd = new RelayCommand(_ => { LimparFiltros(); CarregarProdutos(); });
@@ -151,7 +152,13 @@ namespace WpfApp.ViewModels
                 Produto result;
                 if (_isNovo)
                 {
-                    result = _repo.Add(ProdutoEdicao);
+                    if (_produtoRepo.GetByCodigo(ProdutoEdicao.Codigo) != null)
+                    {
+                        MessageBox.Show("Já existe um produto com este código.", "Atenção", 
+                            MessageBoxButton.OK, MessageBoxImage.Information);
+                        return;
+                    }
+                    result = _produtoRepo.Add(ProdutoEdicao);
                 }
                 else
                 {
@@ -166,7 +173,7 @@ namespace WpfApp.ViewModels
                     ProdutoSelecionado.Codigo = ProdutoEdicao.Codigo;
                     ProdutoSelecionado.Valor = ProdutoEdicao.Valor;
                     
-                    result = _repo.Update(ProdutoSelecionado);
+                    result = _produtoRepo.Update(ProdutoSelecionado);
                 }
 
                 if (result == null)
@@ -176,7 +183,6 @@ namespace WpfApp.ViewModels
                 }
 
                 CarregarProdutos();
-                ProdutoSelecionado = ProdutosCollection.FirstOrDefault(p => p.Id == result.Id);
 
                 ProdutoEdicao = new Produto();
                 IsCamposHabilitados = false;
@@ -197,7 +203,7 @@ namespace WpfApp.ViewModels
                 MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 return;
 
-            var ok = _repo.SoftDelete(ProdutoSelecionado.Id);
+            var ok = _produtoRepo.SoftDelete(ProdutoSelecionado.Id);
             if (!ok)
             {
                 MessageBox.Show("Não foi possível inativar o produto.", "Erro", 
@@ -215,9 +221,11 @@ namespace WpfApp.ViewModels
         private void CarregarProdutos()
         {
             ProdutosCollection.Clear();
-            var query = _repo.Query(FiltroNome, FiltroCodigo, FiltroMin, FiltroMax);
-            foreach (var p in query)
-                ProdutosCollection.Add(p);
+            var query = _produtoRepo.Query(FiltroNome, FiltroCodigo, FiltroMin, FiltroMax);
+            
+            //foreach (var p in query)
+            //    ProdutosCollection.Add(p);
+            ProdutosCollection.AddRange(query);
 
             // Atualiza CanExecute de Excluir/Salvar
             CommandManager.InvalidateRequerySuggested();

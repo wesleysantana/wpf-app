@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
 using WpfApp.Models;
+using WpfApp.Services;
 using WpfApp.Services.Repositories;
 using WpfApp.ViewModels.Base;
 
@@ -9,51 +11,58 @@ namespace WpfApp.ViewModels
 {
     public class PedidosViewModel : BaseViewModel
     {
-        private readonly PedidoRepository _pedidos;
-        private readonly ProdutoRepository _produtos;
+        private readonly PedidoRepository _pedidosRepo;
+        private readonly ProdutoRepository _produtosRepo;
+        private readonly PessoaRepository _pessoasRepo;
+        public bool IsFinalizado { get; private set; }
 
-        public ObservableCollection<Pessoa> Pessoas { get; } = new ObservableCollection<Pessoa>();
-        public ObservableCollection<Produto> Produtos { get; } = new ObservableCollection<Produto>();
-        public ObservableCollection<PedidoItem> Itens { get; } = new ObservableCollection<PedidoItem>();
+        public ObservableCollection<Pessoa> PessoasCollection { get; }
+        public ObservableCollection<Produto> ProdutosCollection { get; }
+        public ObservableCollection<PedidoItem> ItensCollection { get; } = new ObservableCollection<PedidoItem>();
 
         public Pessoa PessoaSelecionada { get; set; }
         public Produto ProdutoSelecionado { get; set; }
         public int Quantidade { get; set; } = 1;
         public FormaPagamento FormaPagamento { get; set; }
-        public decimal ValorTotal => Itens.Sum(i => i.Subtotal);
+        public decimal ValorTotal => ItensCollection.Sum(i => i.Subtotal);
 
         public RelayCommand AdicionarItemCmd { get; }
         public RelayCommand RemoverItemCmd { get; }
         public RelayCommand FinalizarCmd { get; }
         public RelayCommand CancelarCmd { get; }
 
-        public PedidosViewModel(PedidoRepository pedidos, ProdutoRepository produtos, Pessoa pessoaPreSelecionada = null)
+        public PedidosViewModel(PessoaRepository pessoaRepo, PedidoRepository pedidos, ProdutoRepository produtos, Pessoa pessoaPreSelecionada = null)
         {
-            _pedidos = pedidos;
-            _produtos = produtos;
+            _pedidosRepo = pedidos;
+            _produtosRepo = produtos;
+            _pessoasRepo = pessoaRepo;
 
-            AddProdutos();
+            // Carrega pessoas e produtos
+            PessoasCollection = new ObservableCollection<Pessoa>(_pessoasRepo.All());
+            ProdutosCollection = new ObservableCollection<Produto>(_produtosRepo.All());
 
             PessoaSelecionada = pessoaPreSelecionada;
 
-            AdicionarItemCmd = new RelayCommand(_ => AdicionarItem());
-            RemoverItemCmd = new RelayCommand(item => RemoverItem((PedidoItem)item));
+            AdicionarItemCmd = new RelayCommand(_ => AdicionarItem(), _ => PodeAdicionarItem);
 
-            FinalizarCmd = new RelayCommand(_ => Finalizar());
+            RemoverItemCmd = new RelayCommand(item => RemoverItem((PedidoItem)item), _ => !IsFinalizado);
+
+            FinalizarCmd = new RelayCommand(_ => Finalizar(), _ => PodeFinalizar);
 
             CancelarCmd = new RelayCommand(_ => CloseRequested?.Invoke(this, false));
-        }
+        }       
 
-        private void AddProdutos()
-        {
-            foreach (var pr in _produtos.All())
-                Produtos.Add(pr);
-        }
+        public bool PodeAdicionarItem => ProdutoSelecionado != null && Quantidade > 0 && !IsFinalizado;
+
+        public bool PodeFinalizar =>
+            PessoaSelecionada != null &&
+            ItensCollection.Any() &&
+            !IsFinalizado;
 
         private void AdicionarItem()
         {
-            if (ProdutoSelecionado == null || Quantidade <= 0) return;
-            Itens.Add(new PedidoItem
+            if (!PodeAdicionarItem) return;
+            ItensCollection.Add(new PedidoItem
             {
                 ProdutoId = ProdutoSelecionado.Id,
                 ProdutoNome = ProdutoSelecionado.Nome,
@@ -61,26 +70,28 @@ namespace WpfApp.ViewModels
                 Quantidade = Quantidade
             });
             OnPropertyChanged(nameof(ValorTotal));
+            CommandManager.InvalidateRequerySuggested();
         }
 
         private void RemoverItem(PedidoItem item)
         {
-            var it = item as PedidoItem;
-            if (it == null) return;
-
-            Itens.Remove(it);
+            if (item == null || IsFinalizado) return;
+            ItensCollection.Remove(item);
             OnPropertyChanged(nameof(ValorTotal));
+            CommandManager.InvalidateRequerySuggested();
         }
 
         private void Finalizar()
         {
+            if (!PodeFinalizar) return;
+
             if (PessoaSelecionada == null)
             {
                 System.Windows.MessageBox.Show("Selecione a pessoa.");
                 return;
             }
 
-            if (!Itens.Any())
+            if (!ItensCollection.Any())
             {
                 System.Windows.MessageBox.Show("Adicione ao menos um produto.");
                 return;
@@ -90,12 +101,14 @@ namespace WpfApp.ViewModels
             {
                 PessoaId = PessoaSelecionada.Id,
                 PessoaNome = PessoaSelecionada.Nome,
-                Itens = Itens.ToList(),
+                Itens = ItensCollection.ToList(),
                 FormaPagamento = FormaPagamento,
                 Status = StatusPedido.Pendente,
                 Finalizado = true
             };
-            _pedidos.Add(pedido);
+            _pedidosRepo.Add(pedido);
+            IsFinalizado = true;
+            CommandManager.InvalidateRequerySuggested();
             CloseRequested?.Invoke(this, true);
         }
 

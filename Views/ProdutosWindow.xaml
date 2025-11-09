@@ -74,7 +74,7 @@
                     <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" Width="60"/>
                     <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="*"/>
                     <DataGridTextColumn Header="Código" Binding="{Binding Codigo}" Width="150"/>
-                    <DataGridTextColumn Header="Valor" Binding="{Binding Valor, StringFormat={}{0:C2}}" Width="120"/>
+                    <DataGridTextColumn Header="Valor" Binding="{Binding Valor, StringFormat=\{0:C2\},ConverterCulture='pt-BR'}" Width="120"/>
                 </DataGrid.Columns>
             </DataGrid>
         </GroupBox>
