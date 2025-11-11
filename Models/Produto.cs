@@ -41,7 +41,8 @@ namespace WpfApp.Models
             get => _ativo; 
             set 
             { 
-                _ativo = value; OnPropertyChanged(nameof(Ativo)); 
+                _ativo = value; 
+                SetProperty(ref _ativo, value); 
             } 
         }
 

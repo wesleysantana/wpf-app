@@ -64,7 +64,6 @@ namespace WpfApp.ViewModels
 
         // Commands
         public RelayCommand FiltrarCmd { get; }
-
         public RelayCommand NovoPedidoCmd { get; }
         public RelayCommand MarcarPagoCmd { get; }
         public RelayCommand MarcarEnviadoCmd { get; }

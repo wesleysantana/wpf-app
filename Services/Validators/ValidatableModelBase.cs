@@ -80,7 +80,6 @@ namespace WpfApp.Services.Validators
 
         /// <summary>
         /// Por padrão, retorna todas as propriedades públicas com setter.
-        /// Você pode simplificar retornando um array fixo em cada Model.
         /// </summary>
         protected virtual IEnumerable<string> GetValidatableProperties() => Array.Empty<string>();
     }
