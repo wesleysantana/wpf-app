@@ -47,7 +47,7 @@ Desenvolvedor C#**.
 
 ### 2. Clonar o repositório
 
-    git clone https://github.com/usuario/wpfapp.git
+    git clone https://github.com/wesleysantana/wpfapp.git
 
 ### 3. Abrir a solução
 
