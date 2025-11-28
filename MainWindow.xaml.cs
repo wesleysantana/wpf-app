@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Media.Imaging;
+﻿using System.Windows;
 using WpfApp.Services;
 using WpfApp.Services.Repositories;
 using WpfApp.ViewModels;
@@ -18,7 +16,7 @@ namespace WpfApp
         public MainWindow()
         {
             InitializeComponent();
-            CarregarImagemBenner();
+            CarregarImagem();
         }
 
         private void OpenPeople(object s, RoutedEventArgs e)
@@ -71,15 +69,15 @@ namespace WpfApp
             win.ShowDialog();
         }
 
-        private void CarregarImagemBenner()
+        private void CarregarImagem()
         {
-            string caminhoUri = "pack://application:,,,/Resources/Benner.png";
+            //string caminhoUri = "pack://application:,,,/Resources/*.png";
 
-            Uri uriImagem = new Uri(caminhoUri, UriKind.Absolute);
+            //Uri uriImagem = new Uri(caminhoUri, UriKind.Absolute);
 
-            BitmapImage bitmap = new BitmapImage(uriImagem);
+            //BitmapImage bitmap = new BitmapImage(uriImagem);
 
-            imgBenner.Source = bitmap;
+            //*.Source = bitmap;
         }
     }
 }

@@ -175,9 +175,6 @@
     <Folder Include="Data\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Benner.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\people.png" />
   </ItemGroup>
   <ItemGroup>

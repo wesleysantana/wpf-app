@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp"
         mc:Ignorable="d"
-        Title="Benner" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Title="Sales" Height="450" Width="800" WindowStartupLocation="CenterScreen">
 
     <DockPanel Background="White">
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="16,8,16,8">
@@ -42,7 +42,7 @@
             </Button>
         </StackPanel>
 
-        <Image x:Name="imgBenner" 
+        <Image 
                Width="452" 
                Height="235" 
                Stretch="Uniform"
